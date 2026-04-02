@@ -34,7 +34,7 @@
 
 ### Клонирование репозитория
 - git clone 
--cd vegetable-classifier
+- cd vegetable-classifier
 
 ### Установка зависимостей
 -pip install -r requirements.txt
