@@ -32,16 +32,16 @@
 
 ### Локальный запуск
 
-#### Клонирование репозитория
-#### git clone 
-cd vegetable-classifier
+### Клонирование репозитория
+- git clone 
+-cd vegetable-classifier
 
-#### Установка зависимостей
-pip install -r requirements.txt
+### Установка зависимостей
+-pip install -r requirements.txt
 
 ### Docker запуск
-# Запуск сервиса
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+### Запуск сервиса
+-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ### Сборка образа
 docker build -t vegetable-classifier .
