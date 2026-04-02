@@ -133,26 +133,25 @@ docker rm veggie-api
 docker-compose up -d
 docker-compose down
 
-# 📁 Структура проекта
-text
-vegetable-classifier/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI приложение
-│   ├── models.py            # Архитектуры моделей
-│   ├── utils.py             # Утилиты
-│   ├── gradcam.py           # Grad-CAM визуализация
-│   └── static/
-│       └── index.html       # Веб-интерфейс
-├── models/
-│   ├── custom_cnn_best.pth  # Обученная модель
-│   └── resnet50v2_best.pth  # Предобученная модель
-├── docker/
-│   └── Dockerfile
-├── requirements.txt
-├── docker-compose.yml
-├── .gitignore
-└── README.md
+# 📁 Структура проекта 
+
+- **app/**
+  - `__init__.py`
+  - `main.py` (FastAPI приложение)
+  - `models.py` (архитектуры моделей)
+  - `utils.py` (утилиты)
+  - `gradcam.py` (Grad-CAM визуализация)
+  - **static/**
+    - `index.html` (веб-интерфейс)
+- **models/**
+  - `custom_cnn_best.pth` (обученная модель)
+  - `resnet50v2_best.pth` (предобученная модель)
+- **docker/**
+  - `Dockerfile`
+- `requirements.txt`
+- `docker-compose.yml`
+- `.gitignore`
+- `README.md`
 
 # 🔧 Требования
 Python 3.9+
