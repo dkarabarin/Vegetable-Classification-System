@@ -52,7 +52,7 @@ docker run -p 8000:8000 vegetable-classifier
 ### Или с docker-compose
 docker-compose up --build
 
-```markdown
+
 # 📡 API Эндпоинты
 
 ## GET /ping
