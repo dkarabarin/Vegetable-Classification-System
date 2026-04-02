@@ -32,7 +32,6 @@
 
 ### Локальный запуск
 
-```bash
 #### Клонирование репозитория
 git clone 
 cd vegetable-classifier
@@ -86,19 +85,19 @@ file: Изображение
 target_class: Целевой класс (опционально)
 
 model_type: "custom" или "pretrained"
-📊 Примеры использования
+# 📊 Примеры использования
 cURL
 bash
-# Классификация
+## Классификация
 curl -X POST "http://localhost:8000/classify?model_type=custom" \
   -F "file=@tomato.jpg"
 
-# Сравнение
+## Сравнение
 curl -X POST "http://localhost:8000/similarity?model_type=custom" \
   -F "file1=@tomato1.jpg" \
   -F "file2=@tomato2.jpg"
 
-# Grad-CAM
+## Grad-CAM
 curl -X POST "http://localhost:8000/gradcam?model_type=custom" \
   -F "file=@tomato.jpg" \
   -o heatmap.png
@@ -106,7 +105,7 @@ Python
 python
 import requests
 
-# Классификация
+## Классификация
 with open('tomato.jpg', 'rb') as f:
     response = requests.post(
         'http://localhost:8000/classify',
@@ -114,27 +113,27 @@ with open('tomato.jpg', 'rb') as f:
         files={'file': f}
     )
     print(response.json())
-🐳 Docker команды
-bash
-# Сборка образа
+# 🐳 Docker команды
+### Сборка образа
 docker build -t vegetable-classifier .
 
-# Запуск контейнера
+### Запуск контейнера
 docker run -d -p 8000:8000 --name veggie-api vegetable-classifier
 
-# Просмотр логов
+### Просмотр логов
 docker logs -f veggie-api
 
-# Остановка контейнера
+### Остановка контейнера
 docker stop veggie-api
 
-# Удаление контейнера
+### Удаление контейнера
 docker rm veggie-api
 
-# Запуск с docker-compose
+### Запуск с docker-compose
 docker-compose up -d
 docker-compose down
-📁 Структура проекта
+
+# 📁 Структура проекта
 text
 vegetable-classifier/
 ├── app/
@@ -154,16 +153,14 @@ vegetable-classifier/
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
-🔧 Требования
+
+# 🔧 Требования
 Python 3.9+
-
 CUDA (опционально, для GPU)
-
 Docker (опционально)
-
 4GB RAM минимум
 
-📈 Метрики моделей
+# 📈 Метрики моделей
 Модель	Accuracy	Precision	Recall	F1-Score	Параметры
 Custom CNN	95,96%	0.962	0.956	0.959	0.36M
 ResNet50V2	99,6%	0.996	0.996	0.996	24.69M
