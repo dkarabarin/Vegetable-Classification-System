@@ -53,13 +53,13 @@ docker run -p 8000:8000 vegetable-classifier
 docker-compose up --build
 
 # 📡 API Эндпоинты
-GET /ping
-{
-    "status": "alive",
-    "message": "Vegetable Classification Service is running",
-    "device": "cuda",
-    "models_loaded": {"custom_cnn": true, "resnet50v2": true}
-POST /classify
+## GET /ping
+### {
+###     "status": "alive",
+###     "message": "Vegetable Classification Service is running",
+###     "device": "cuda",
+###     "models_loaded": {"custom_cnn": true, "resnet50v2": true}
+## POST /classify
 {
     "success": true,
     "model_used": "custom",
@@ -68,7 +68,7 @@ POST /classify
     "top_3_predictions": [...],
     "all_probabilities": {...}
 }
-POST /similarity
+## POST /similarity
 {
     "success": true,
     "similarity_score": 0.87,
