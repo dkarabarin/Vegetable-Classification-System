@@ -52,60 +52,77 @@ docker run -p 8000:8000 vegetable-classifier
 ### Или с docker-compose
 docker-compose up --build
 
+```markdown
 # 📡 API Эндпоинты
+
 ## GET /ping
-### {
-###     "status": "alive",
-###     "message": "Vegetable Classification Service is running",
-###     "device": "cuda",
-###     "models_loaded": {"custom_cnn": true, "resnet50v2": true}
+```json
+{
+    "status": "alive",
+    "message": "Vegetable Classification Service is running",
+    "device": "cuda",
+    "models_loaded": {"custom_cnn": true, "resnet50v2": true}
+}
+```
+
 ## POST /classify
+```json
 {
     "success": true,
     "model_used": "custom",
     "predicted_class": "Tomato",
     "confidence": 0.95,
-    "top_3_predictions": [...],
+    "top_3_predictions": ,
     "all_probabilities": {...}
 }
+```
+
 ## POST /similarity
+```json
 {
     "success": true,
     "similarity_score": 0.87,
     "interpretation": "Highly similar",
     "scale": "(-1 to 1, where 1 = identical)"
 }
-POST /gradcam
+```
+
+## POST /gradcam
 Визуализация Grad-CAM
 
 Параметры:
+- `file`: изображение
+- `target_class`: целевой класс (опционально)
+- `model_type`: "custom" или "pretrained"
 
-file: Изображение
+---
 
-target_class: Целевой класс (опционально)
-
-model_type: "custom" или "pretrained"
 # 📊 Примеры использования
-cURL
-bash
+
 ## Классификация
+```bash
 curl -X POST "http://localhost:8000/classify?model_type=custom" \
   -F "file=@tomato.jpg"
+```
 
 ## Сравнение
+```bash
 curl -X POST "http://localhost:8000/similarity?model_type=custom" \
   -F "file1=@tomato1.jpg" \
   -F "file2=@tomato2.jpg"
+```
 
 ## Grad-CAM
+```bash
 curl -X POST "http://localhost:8000/gradcam?model_type=custom" \
   -F "file=@tomato.jpg" \
   -o heatmap.png
-Python
-python
+```
+
+## Python пример
+```python
 import requests
 
-## Классификация
 with open('tomato.jpg', 'rb') as f:
     response = requests.post(
         'http://localhost:8000/classify',
@@ -113,6 +130,10 @@ with open('tomato.jpg', 'rb') as f:
         files={'file': f}
     )
     print(response.json())
+```
+
+---
+
 # 🐳 Docker команды
 ### Сборка образа
 docker build -t vegetable-classifier .
