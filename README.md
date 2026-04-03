@@ -92,14 +92,10 @@ Docker (опционально)
 | ResNet50V2      | 99,6%    | 0.996     | 0.996  | 0.996    | 24.69M    |
 
 # Внешний вид и пример использования
-## Стартовое меню
 
-## Класификация
+![start](https://github.com/user-attachments/assets/6d8c018a-dc95-46d5-a744-a0752dd27a91)
 
-## Сравнение
 
-## Grad
-![Uploading image.png…]()
 
 
 
