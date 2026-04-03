@@ -1,5 +1,6 @@
-<img width="1420" height="872" alt="image" src="https://github.com/user-attachments/assets/9081a8b9-c016-4aff-9b78-d738a28886a6" /># 🥬 Vegetable Classification System
+<img width="1420" height="872" alt="image" src="https://github.com/user-attachments/assets/9081a8b9-c016-4aff-9b78-d738a28886a6" />
 
+# 🥬 Vegetable Classification System
 Система компьютерного зрения для классификации овощей с использованием глубокого обучения.
 
 ## 🎯 Описание
