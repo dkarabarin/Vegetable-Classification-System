@@ -17,9 +17,6 @@
 - ✅ REST API с документацией Swagger
 - ✅ Веб-интерфейс для тестирования
 - ✅ Docker контейнеризация
-<img width="1420" height="872" alt="image" src="https://github.com/user-attachments/assets/ab4f289b-458a-4979-b13a-a04d8541265e" />
-
-
 
 ## 🚀 Установка и запуск
 
