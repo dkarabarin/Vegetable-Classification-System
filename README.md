@@ -45,84 +45,13 @@ docker-compose up --build
 
 # 📡 API Эндпоинты
 
-## GET /ping
-```json
-{
-    "status": "alive",
-    "message": "Vegetable Classification Service is running",
-    "device": "cuda",
-    "models_loaded": {"custom_cnn": true, "resnet50v2": true}
-}
-```
+📍 Доступные эндпоинты:
 
-## POST /classify
-```json
-{
-    "success": true,
-    "model_used": "custom",
-    "predicted_class": "Tomato",
-    "confidence": 0.95,
-    "top_3_predictions": ,
-    "all_probabilities": {...}
-}
-```
-
-## POST /similarity
-```json
-{
-    "success": true,
-    "similarity_score": 0.87,
-    "interpretation": "Highly similar",
-    "scale": "(-1 to 1, where 1 = identical)"
-}
-```
-
-## POST /gradcam
-Визуализация Grad-CAM
-
-Параметры:
-- `file`: изображение
-- `target_class`: целевой класс (опционально)
-- `model_type`: "custom" или "pretrained"
-
----
-
-# 📊 Примеры использования
-
-## Классификация
-```bash
-curl -X POST "http://localhost:8000/classify?model_type=custom" \
-  -F "file=@tomato.jpg"
-```
-
-## Сравнение
-```bash
-curl -X POST "http://localhost:8000/similarity?model_type=custom" \
-  -F "file1=@tomato1.jpg" \
-  -F "file2=@tomato2.jpg"
-```
-
-## Grad-CAM
-```bash
-curl -X POST "http://localhost:8000/gradcam?model_type=custom" \
-  -F "file=@tomato.jpg" \
-  -o heatmap.png
-```
-
-## Python пример
-```python
-import requests
-
-with open('tomato.jpg', 'rb') as f:
-    response = requests.post(
-        'http://localhost:8000/classify',
-        params={'model_type': 'custom'},
-        files={'file': f}
-    )
-    print(response.json())
-```
-
----
+- Swagger документация: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+- Веб-интерфейс: http://localhost:8000
+- Health Check: http://localhost:8000/health
+- Ping: http://localhost:8000/ping
 
 # 🐳 Docker команды
 ### Сборка образа
