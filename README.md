@@ -29,20 +29,6 @@
 ### Установка зависимостей
 -pip install -r requirements.txt
 
-### Docker запуск
-### Запуск сервиса
--uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
-### Сборка образа
-docker build -t vegetable-classifier .
-
-### Запуск контейнера
-docker run -p 8000:8000 vegetable-classifier
-
-### Или с docker-compose
-docker-compose up --build
-
-
 # 📡 API Эндпоинты
 
 📍 Доступные эндпоинты:
