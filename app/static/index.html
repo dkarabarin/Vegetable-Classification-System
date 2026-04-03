@@ -1,190 +1,179 @@
-<!-- app/static/index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vegetable Classifier - Система классификации овощей</title>
+    <title>Vegetable Classification API - Интерфейс</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-        
+
         h1 {
             text-align: center;
             color: white;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        
-        .subtitle {
-            text-align: center;
-            color: rgba(255,255,255,0.9);
+
+        .tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 30px;
-            font-size: 1.1em;
+            justify-content: center;
         }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 25px;
-            margin-bottom: 25px;
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .card {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
-        
-        .card-title {
-            color: #667eea;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
+
         .upload-area {
             border: 2px dashed #667eea;
-            border-radius: 10px;
-            padding: 30px;
+            border-radius: 15px;
+            padding: 40px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 20px;
         }
-        
+
         .upload-area:hover {
-            background: #f0f0ff;
+            background: #f7f7ff;
             border-color: #764ba2;
         }
-        
+
         .upload-area.drag-over {
-            background: #e0e0ff;
+            background: #e8eaff;
             border-color: #764ba2;
         }
-        
-        input[type="file"] {
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
             display: none;
         }
-        
-        .btn {
+
+        .model-select {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 12px 30px;
-            border-radius: 8px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
-            margin: 5px;
+            margin-top: 15px;
+            transition: transform 0.2s;
         }
-        
-        .btn:hover {
+
+        button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        
-        .result {
+
+        .results {
             margin-top: 20px;
-            padding: 15px;
-            background: #f7fafc;
+            padding: 20px;
+            background: #f8f9fa;
             border-radius: 10px;
             display: none;
         }
-        
-        .result.show {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .prediction {
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
-            border-radius: 8px;
-        }
-        
-        .confidence {
-            color: #48bb78;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        .image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin: 10px auto;
-            display: block;
+
+        .probability-bar {
+            background: #e9ecef;
             border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            height: 30px;
+            margin: 10px 0;
+            overflow: hidden;
         }
-        
+
+        .probability-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-size: 12px;
+            transition: width 0.3s;
+        }
+
         .similarity-score {
-            font-size: 2em;
+            font-size: 48px;
             text-align: center;
+            font-weight: bold;
             margin: 20px 0;
-            padding: 20px;
-            border-radius: 10px;
         }
-        
-        .score-high {
-            background: #48bb7820;
-            color: #48bb78;
-        }
-        
-        .score-medium {
-            background: #ed893620;
-            color: #ed8936;
-        }
-        
-        .score-low {
-            background: #e53e3e20;
-            color: #e53e3e;
-        }
-        
-        .flex-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
+
+        .high-similarity { color: #28a745; }
+        .medium-similarity { color: #ffc107; }
+        .low-similarity { color: #dc3545; }
+
         .loading {
             display: inline-block;
             width: 20px;
@@ -193,53 +182,39 @@
             border-top: 3px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
+        .heatmap-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .heatmap-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
         .status {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-online {
-            background: #48bb78;
-            box-shadow: 0 0 5px #48bb78;
-        }
-        
-        .probabilities {
-            max-height: 300px;
-            overflow-y: auto;
-            font-size: 0.9em;
-        }
-        
-        .prob-bar {
-            background: #e2e8f0;
-            border-radius: 5px;
-            margin: 5px 0;
-            overflow: hidden;
-        }
-        
-        .prob-fill {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
             color: white;
-            padding: 3px 8px;
-            font-size: 0.8em;
-            border-radius: 5px;
-            transition: width 0.5s;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 12px;
         }
-        
+
         @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            .flex-2 {
+            .grid-2 {
                 grid-template-columns: 1fr;
             }
         }
@@ -247,352 +222,375 @@
 </head>
 <body>
     <div class="container">
-        <h1>🥬 Vegetable Classification System</h1>
-        <div class="subtitle">Система компьютерного зрения для идентификации овощей</div>
+        <h1>🥕 Vegetable Classification API</h1>
         
-        <div class="grid">
-            <!-- Классификация -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('classify')">Классификация</button>
+            <button class="tab-btn" onclick="switchTab('similarity')">Сравнение</button>
+            <button class="tab-btn" onclick="switchTab('gradcam')">Grad-CAM</button>
+        </div>
+
+        <!-- Классификация -->
+        <div id="classify-tab" class="tab-content active">
             <div class="card">
-                <div class="card-title">
-                    📷 Классификация
+                <h2>📷 Классификация овощей</h2>
+                <div class="upload-area" id="classify-upload">
+                    <p>📁 Нажмите или перетащите изображение</p>
+                    <input type="file" id="classify-file" accept="image/*" style="display:none">
                 </div>
-                <div class="upload-area" id="classify-area">
-                    <div>📸 Нажмите или перетащите изображение для классификации</div>
-                    <input type="file" id="classify-file" accept="image/*">
-                    <div id="classify-preview"></div>
-                </div>
-                <div style="text-align: center">
-                    <button class="btn" onclick="classifyImage('custom')">🔍 Custom CNN</button>
-                    <button class="btn btn-secondary" onclick="classifyImage('pretrained')">🚀 ResNet50V2</button>
-                </div>
-                <div id="classify-result" class="result"></div>
-            </div>
-            
-            <!-- Сравнение -->
-            <div class="card">
-                <div class="card-title">
-                    🔄 Сравнение изображений
-                </div>
-                <div class="flex-2">
-                    <div class="upload-area" onclick="document.getElementById('similarity-file1').click()">
-                        <div>📸 Изображение 1</div>
-                        <input type="file" id="similarity-file1" accept="image/*">
-                        <div id="similarity-preview1"></div>
-                    </div>
-                    <div class="upload-area" onclick="document.getElementById('similarity-file2').click()">
-                        <div>📸 Изображение 2</div>
-                        <input type="file" id="similarity-file2" accept="image/*">
-                        <div id="similarity-preview2"></div>
-                    </div>
-                </div>
-                <div style="text-align: center">
-                    <button class="btn" onclick="calculateSimilarity('custom')">📊 Custom CNN</button>
-                    <button class="btn btn-secondary" onclick="calculateSimilarity('pretrained')">📊 ResNet50V2</button>
-                </div>
-                <div id="similarity-result" class="result"></div>
+                <img id="classify-preview" class="image-preview">
+                
+                <select id="classify-model" class="model-select">
+                    <option value="custom">Custom CNN</option>
+                    <option value="pretrained">ResNet50 (Pretrained)</option>
+                </select>
+                
+                <button id="classify-btn" onclick="classifyImage()" disabled>Классифицировать</button>
+                
+                <div id="classify-results" class="results"></div>
             </div>
         </div>
-        
+
+        <!-- Сравнение -->
+        <div id="similarity-tab" class="tab-content">
+            <div class="card">
+                <h2>🔍 Сравнение изображений</h2>
+                <div class="grid-2">
+                    <div>
+                        <h3>Изображение 1</h3>
+                        <div class="upload-area" id="similarity-upload1">
+                            <p>📁 Нажмите или перетащите</p>
+                            <input type="file" id="similarity-file1" accept="image/*" style="display:none">
+                        </div>
+                        <img id="similarity-preview1" class="image-preview">
+                    </div>
+                    <div>
+                        <h3>Изображение 2</h3>
+                        <div class="upload-area" id="similarity-upload2">
+                            <p>📁 Нажмите или перетащите</p>
+                            <input type="file" id="similarity-file2" accept="image/*" style="display:none">
+                        </div>
+                        <img id="similarity-preview2" class="image-preview">
+                    </div>
+                </div>
+                
+                <select id="similarity-model" class="model-select">
+                    <option value="custom">Custom CNN</option>
+                    <option value="pretrained">ResNet50 (Pretrained)</option>
+                </select>
+                
+                <button id="similarity-btn" onclick="compareImages()" disabled>Сравнить</button>
+                
+                <div id="similarity-results" class="results"></div>
+            </div>
+        </div>
+
         <!-- Grad-CAM -->
-        <div class="card">
-            <div class="card-title">
-                🔥 Grad-CAM Визуализация
-            </div>
-            <div class="upload-area" id="gradcam-area">
-                <div>📸 Загрузите изображение для визуализации внимания модели</div>
-                <input type="file" id="gradcam-file" accept="image/*">
-                <div id="gradcam-preview"></div>
-            </div>
-            <div style="text-align: center">
-                <button class="btn" onclick="generateGradCAM('custom')">🔥 Custom CNN</button>
-                <button class="btn btn-secondary" onclick="generateGradCAM('pretrained')">🔥 ResNet50V2</button>
-            </div>
-            <div id="gradcam-result" class="result">
-                <div class="flex-2">
-                    <div>
-                        <h4>Оригинал</h4>
-                        <img id="gradcam-original" style="max-width: 100%; border-radius: 10px;">
-                    </div>
-                    <div>
-                        <h4>Grad-CAM Heatmap</h4>
-                        <img id="gradcam-heatmap" style="max-width: 100%; border-radius: 10px;">
-                    </div>
+        <div id="gradcam-tab" class="tab-content">
+            <div class="card">
+                <h2>🔬 Grad-CAM визуализация</h2>
+                <div class="upload-area" id="gradcam-upload">
+                    <p>📁 Нажмите или перетащите изображение</p>
+                    <input type="file" id="gradcam-file" accept="image/*" style="display:none">
                 </div>
-                <div id="gradcam-info" style="margin-top: 15px; text-align: center"></div>
+                <img id="gradcam-preview" class="image-preview">
+                
+                <select id="gradcam-model" class="model-select">
+                    <option value="custom">Custom CNN</option>
+                    <option value="pretrained">ResNet50 (Pretrained)</option>
+                </select>
+                
+                <button id="gradcam-btn" onclick="generateGradCAM()" disabled>Сгенерировать Grad-CAM</button>
+                
+                <div id="gradcam-results" class="results"></div>
             </div>
-        </div>
-        
-        <!-- Статус -->
-        <div class="card">
-            <div class="card-title">
-                ℹ️ Статус сервиса
-            </div>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap">
-                <button class="btn" onclick="checkPing()">🏓 Ping</button>
-                <button class="btn btn-secondary" onclick="checkHealth()">🏥 Health Check</button>
-            </div>
-            <div id="status-result" class="result"></div>
         </div>
     </div>
-    
+
+    <div class="status" id="status">✅ Сервис готов</div>
+
     <script>
-        const API_URL = window.location.origin;
-        
-        // Drag and drop functionality
-        function setupDragAndDrop(areaId, fileInputId, previewId) {
-            const area = document.getElementById(areaId);
+        // Состояние
+        let state = {
+            classify: { file: null },
+            similarity: { file1: null, file2: null },
+            gradcam: { file: null }
+        };
+
+        // Переключение вкладок
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Настройка загрузки файлов
+        function setupUpload(uploadId, fileInputId, previewId, type) {
+            const uploadDiv = document.getElementById(uploadId);
             const fileInput = document.getElementById(fileInputId);
+            const preview = document.getElementById(previewId);
+
+            uploadDiv.onclick = () => fileInput.click();
             
-            area.addEventListener('dragover', (e) => {
+            uploadDiv.ondragover = (e) => {
                 e.preventDefault();
-                area.classList.add('drag-over');
-            });
+                uploadDiv.classList.add('drag-over');
+            };
             
-            area.addEventListener('dragleave', () => {
-                area.classList.remove('drag-over');
-            });
+            uploadDiv.ondragleave = () => {
+                uploadDiv.classList.remove('drag-over');
+            };
             
-            area.addEventListener('drop', (e) => {
+            uploadDiv.ondrop = (e) => {
                 e.preventDefault();
-                area.classList.remove('drag-over');
+                uploadDiv.classList.remove('drag-over');
                 const file = e.dataTransfer.files[0];
                 if (file && file.type.startsWith('image/')) {
-                    fileInput.files = e.dataTransfer.files;
-                    previewImage(file, previewId);
+                    handleFile(file, fileInput, preview, type);
                 }
-            });
+            };
             
-            area.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', (e) => {
+            fileInput.onchange = (e) => {
                 if (e.target.files[0]) {
-                    previewImage(e.target.files[0], previewId);
+                    handleFile(e.target.files[0], fileInput, preview, type);
                 }
-            });
+            };
         }
-        
-        function previewImage(file, previewId) {
+
+        function handleFile(file, fileInput, preview, type) {
+            // Сохраняем файл в состояние
+            if (type === 'classify') {
+                state.classify.file = file;
+                document.getElementById('classify-btn').disabled = false;
+            } else if (type === 'similarity1') {
+                state.similarity.file1 = file;
+                checkSimilarityButton();
+            } else if (type === 'similarity2') {
+                state.similarity.file2 = file;
+                checkSimilarityButton();
+            } else if (type === 'gradcam') {
+                state.gradcam.file = file;
+                document.getElementById('gradcam-btn').disabled = false;
+            }
+            
+            // Показываем превью
             const reader = new FileReader();
             reader.onload = (e) => {
-                const preview = document.getElementById(previewId);
-                preview.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="Preview">`;
+                preview.src = e.target.result;
+                preview.style.display = 'block';
             };
             reader.readAsDataURL(file);
         }
-        
-        async function classifyImage(modelType) {
-            const fileInput = document.getElementById('classify-file');
-            const file = fileInput.files[0];
+
+        function checkSimilarityButton() {
+            const btn = document.getElementById('similarity-btn');
+            btn.disabled = !(state.similarity.file1 && state.similarity.file2);
+        }
+
+        // Классификация
+        async function classifyImage() {
+            if (!state.classify.file) return;
             
-            if (!file) {
-                alert('Пожалуйста, выберите изображение');
-                return;
-            }
+            const btn = document.getElementById('classify-btn');
+            const resultsDiv = document.getElementById('classify-results');
+            const model = document.getElementById('classify-model').value;
             
-            const resultDiv = document.getElementById('classify-result');
-            resultDiv.innerHTML = '<div style="text-align: center"><div class="loading"></div> Обработка...</div>';
-            resultDiv.classList.add('show');
+            showLoading(btn);
             
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', state.classify.file);
+            formData.append('model_type', model);
             
             try {
-                const response = await fetch(`${API_URL}/classify?model_type=${modelType}`, {
+                const response = await fetch('/classify', {
                     method: 'POST',
                     body: formData
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    let probsHtml = '<div class="probabilities">';
-                    for (const [cls, prob] of Object.entries(result.all_probabilities).slice(0, 5)) {
-                        const percent = (prob * 100).toFixed(1);
-                        probsHtml += `
-                            <div>
-                                <div style="display: flex; justify-content: space-between">
-                                    <span>${cls}</span>
-                                    <span>${percent}%</span>
-                                </div>
-                                <div class="prob-bar">
-                                    <div class="prob-fill" style="width: ${percent}%">${percent}%</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    probsHtml += '</div>';
-                    
-                    resultDiv.innerHTML = `
-                        <div class="prediction">
-                            🎯 <strong>Модель:</strong> ${result.model_used === 'custom' ? 'Custom CNN' : 'ResNet50V2'}<br>
-                            🥬 <strong>Предсказанный класс:</strong> ${result.predicted_class}<br>
-                            📊 <strong>Уверенность:</strong> <span class="confidence">${(result.confidence * 100).toFixed(2)}%</span>
+                if (data.success) {
+                    displayClassificationResults(data, resultsDiv);
+                } else {
+                    resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${data.detail}</div>`;
+                    resultsDiv.style.display = 'block';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${error.message}</div>`;
+                resultsDiv.style.display = 'block';
+            } finally {
+                hideLoading(btn);
+            }
+        }
+        
+        function displayClassificationResults(data, container) {
+            const top3 = data.top_3_predictions;
+            let html = `
+                <h3>✅ Результат</h3>
+                <p><strong>Предсказанный класс:</strong> ${data.predicted_class}</p>
+                <p><strong>Уверенность:</strong> ${(data.confidence * 100).toFixed(2)}%</p>
+                <p><strong>Использованная модель:</strong> ${data.model_used}</p>
+                <h4>Топ-3 предсказания:</h4>
+            `;
+            
+            top3.forEach(pred => {
+                const percent = (pred.probability * 100).toFixed(2);
+                html += `
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: ${percent}%">
+                            ${pred.class}: ${percent}%
                         </div>
-                        <details>
-                            <summary>📈 Топ-3 предсказания</summary>
-                            <ul>
-                                ${result.top_3_predictions.map(p => `<li>${p.class}: ${(p.probability * 100).toFixed(2)}%</li>`).join('')}
-                            </ul>
-                        </details>
-                        <details>
-                            <summary>📊 Вероятности по всем классам</summary>
-                            ${probsHtml}
-                        </details>
-                    `;
-                } else {
-                    resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${result.detail}</div>`;
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${error.message}</div>`;
-            }
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            container.style.display = 'block';
         }
         
-        async function calculateSimilarity(modelType) {
-            const file1 = document.getElementById('similarity-file1').files[0];
-            const file2 = document.getElementById('similarity-file2').files[0];
+        // Сравнение
+        async function compareImages() {
+            if (!state.similarity.file1 || !state.similarity.file2) return;
             
-            if (!file1 || !file2) {
-                alert('Пожалуйста, выберите оба изображения');
-                return;
-            }
+            const btn = document.getElementById('similarity-btn');
+            const resultsDiv = document.getElementById('similarity-results');
+            const model = document.getElementById('similarity-model').value;
             
-            const resultDiv = document.getElementById('similarity-result');
-            resultDiv.innerHTML = '<div style="text-align: center"><div class="loading"></div> Вычисление...</div>';
-            resultDiv.classList.add('show');
+            showLoading(btn);
             
             const formData = new FormData();
-            formData.append('file1', file1);
-            formData.append('file2', file2);
+            formData.append('file1', state.similarity.file1);
+            formData.append('file2', state.similarity.file2);
+            formData.append('model_type', model);
             
             try {
-                const response = await fetch(`${API_URL}/similarity?model_type=${modelType}`, {
+                const response = await fetch('/similarity', {
                     method: 'POST',
                     body: formData
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    const scorePercent = (result.similarity_score * 100).toFixed(1);
-                    let scoreClass = '';
-                    if (result.similarity_score > 0.7) scoreClass = 'score-high';
-                    else if (result.similarity_score > 0.3) scoreClass = 'score-medium';
-                    else scoreClass = 'score-low';
-                    
-                    resultDiv.innerHTML = `
-                        <div class="similarity-score ${scoreClass}">
-                            🎯 Схожесть: ${scorePercent}%
-                        </div>
-                        <div><strong>Модель:</strong> ${result.model_used === 'custom' ? 'Custom CNN' : 'ResNet50V2'}</div>
-                        <div><strong>Интерпретация:</strong> ${result.interpretation}</div>
-                        <div><strong>Шкала:</strong> ${result.scale}</div>
-                    `;
+                if (data.success) {
+                    displaySimilarityResults(data, resultsDiv);
                 } else {
-                    resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${result.detail}</div>`;
+                    resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${data.detail}</div>`;
+                    resultsDiv.style.display = 'block';
                 }
             } catch (error) {
-                resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${error.message}</div>`;
+                resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${error.message}</div>`;
+                resultsDiv.style.display = 'block';
+            } finally {
+                hideLoading(btn);
             }
         }
         
-        async function generateGradCAM(modelType) {
-            const fileInput = document.getElementById('gradcam-file');
-            const file = fileInput.files[0];
+        function displaySimilarityResults(data, container) {
+            const score = data.similarity_score;
+            let scoreClass = '';
+            if (score > 0.7) scoreClass = 'high-similarity';
+            else if (score > 0.3) scoreClass = 'medium-similarity';
+            else scoreClass = 'low-similarity';
             
-            if (!file) {
-                alert('Пожалуйста, выберите изображение');
-                return;
-            }
+            const html = `
+                <h3>📊 Результат сравнения</h3>
+                <div class="similarity-score ${scoreClass}">
+                    ${(score * 100).toFixed(1)}%
+                </div>
+                <p><strong>Интерпретация:</strong> ${data.interpretation}</p>
+                <p><strong>Использованная модель:</strong> ${data.model_used}</p>
+                <p><small>Шкала: от -1 до 1, где 1 = идентичные</small></p>
+            `;
             
-            const resultDiv = document.getElementById('gradcam-result');
-            resultDiv.innerHTML = '<div style="text-align: center"><div class="loading"></div> Генерация Grad-CAM...</div>';
-            resultDiv.classList.add('show');
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+        
+        // Grad-CAM
+        async function generateGradCAM() {
+            if (!state.gradcam.file) return;
+            
+            const btn = document.getElementById('gradcam-btn');
+            const resultsDiv = document.getElementById('gradcam-results');
+            const model = document.getElementById('gradcam-model').value;
+            
+            showLoading(btn);
             
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', state.gradcam.file);
+            formData.append('model_type', model);
             
             try {
-                const response = await fetch(`${API_URL}/gradcam?model_type=${modelType}`, {
+                const response = await fetch('/gradcam', {
                     method: 'POST',
                     body: formData
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        document.getElementById('gradcam-original').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                    
-                    document.getElementById('gradcam-heatmap').src = `data:image/png;base64,${result.heatmap_base64}`;
-                    document.getElementById('gradcam-info').innerHTML = `
-                        <strong>Модель:</strong> ${result.model_used === 'custom' ? 'Custom CNN' : 'ResNet50V2'} | 
-                        <strong>Предсказанный класс:</strong> ${result.predicted_class} | 
-                        <strong>Уверенность:</strong> ${(result.confidence * 100).toFixed(2)}%<br>
-                        <strong>Целевой класс для визуализации:</strong> ${result.target_class}
-                    `;
+                if (data.success) {
+                    displayGradCAMResults(data, resultsDiv);
                 } else {
-                    resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${result.detail}</div>`;
+                    resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${data.detail}</div>`;
+                    resultsDiv.style.display = 'block';
                 }
             } catch (error) {
-                resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${error.message}</div>`;
+                resultsDiv.innerHTML = `<div style="color:red">Ошибка: ${error.message}</div>`;
+                resultsDiv.style.display = 'block';
+            } finally {
+                hideLoading(btn);
             }
         }
         
-        async function checkPing() {
-            const resultDiv = document.getElementById('status-result');
-            resultDiv.innerHTML = '<div style="text-align: center"><div class="loading"></div> Проверка...</div>';
-            resultDiv.classList.add('show');
+        function displayGradCAMResults(data, container) {
+            const html = `
+                <h3>🔥 Grad-CAM Визуализация</h3>
+                <p><strong>Предсказанный класс:</strong> ${data.predicted_class}</p>
+                <p><strong>Целевой класс:</strong> ${data.target_class}</p>
+                <p><strong>Уверенность:</strong> ${(data.confidence * 100).toFixed(2)}%</p>
+                <div class="heatmap-container">
+                    <img src="data:image/png;base64,${data.heatmap_base64}" class="heatmap-image">
+                </div>
+            `;
             
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+        
+        // UI helpers
+        function showLoading(btn) {
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.innerHTML = `${originalText} <span class="loading"></span>`;
+        }
+        
+        function hideLoading(btn) {
+            btn.disabled = false;
+            btn.innerHTML = btn.innerHTML.replace(' <span class="loading"></span>', '');
+        }
+        
+        // Инициализация
+        setupUpload('classify-upload', 'classify-file', 'classify-preview', 'classify');
+        setupUpload('similarity-upload1', 'similarity-file1', 'similarity-preview1', 'similarity1');
+        setupUpload('similarity-upload2', 'similarity-file2', 'similarity-preview2', 'similarity2');
+        setupUpload('gradcam-upload', 'gradcam-file', 'gradcam-preview', 'gradcam');
+        
+        // Проверка статуса сервера
+        async function checkStatus() {
             try {
-                const response = await fetch(`${API_URL}/ping`);
-                const result = await response.json();
-                resultDiv.innerHTML = `
-                    <div><span class="status status-online"></span> Сервис работает</div>
-                    <div>Статус: ${result.status}</div>
-                    <div>Сообщение: ${result.message}</div>
-                    <div>Устройство: ${result.device}</div>
-                    <div>Модели: Custom CNN - ${result.models_loaded.custom_cnn ? '✅' : '❌'}, 
-                    ResNet50V2 - ${result.models_loaded.resnet50v2 ? '✅' : '❌'}</div>
-                `;
+                const response = await fetch('/ping');
+                const data = await response.json();
+                document.getElementById('status').innerHTML = '✅ Сервис работает';
+                document.getElementById('status').style.background = '#28a745';
             } catch (error) {
-                resultDiv.innerHTML = `<div style="color: red">❌ Ошибка соединения: ${error.message}</div>`;
+                document.getElementById('status').innerHTML = '❌ Нет соединения с сервером';
+                document.getElementById('status').style.background = '#dc3545';
             }
         }
         
-        async function checkHealth() {
-            const resultDiv = document.getElementById('status-result');
-            resultDiv.innerHTML = '<div style="text-align: center"><div class="loading"></div> Проверка...</div>';
-            resultDiv.classList.add('show');
-            
-            try {
-                const response = await fetch(`${API_URL}/health`);
-                const result = await response.json();
-                resultDiv.innerHTML = `
-                    <div><span class="status status-online"></span> Статус: ${result.status}</div>
-                    <div>Устройство: ${result.device}</div>
-                    <div>Количество классов: ${result.num_classes}</div>
-                    <div>Классы: ${result.classes.join(', ')}</div>
-                    <div>Custom CNN параметры: ${result.custom_model_params.toFixed(2)}M</div>
-                    <div>ResNet50V2 параметры: ${result.pretrained_model_params.toFixed(2)}M</div>
-                `;
-            } catch (error) {
-                resultDiv.innerHTML = `<div style="color: red">❌ Ошибка: ${error.message}</div>`;
-            }
-        }
-        
-        // Setup drag and drop
-        setupDragAndDrop('classify-area', 'classify-file', 'classify-preview');
-        setupDragAndDrop('gradcam-area', 'gradcam-file', 'gradcam-preview');
-        
-        // Setup similarity upload areas
-        document.getElementById('similarity-file1').addEventListener('change', (e) => {
-            if (e.target.files[0]) previewImage(e.target.files[0], 'similarity-preview1');
-        });
-        document.getElementById('similarity-file2').addEventListener('change', (e) => {
-            if (e.target.files[0]) previewImage(e.target.files[0], 'similarity-preview2');
-        });
+        checkStatus();
+        setInterval(checkStatus, 30000);
     </script>
 </body>
 </html>
