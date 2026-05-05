@@ -17,20 +17,42 @@
 - ✅ REST API + Swagger документация
 - ✅ Веб-интерфейс для тестирования
 - ✅ Docker контейнеризация
+- 
+---
 
 ## 🚀 Установка и запуск
 
-### 1. Клонирование репозитория
+1. **Клонировать репозиторий**
+   ```bash
+   git clone https://github.com/
+   ```
 
-### Клонирование репозитория
-- git clone 
-- cd vegetable-classifier
+2. **Создать и активировать виртуальное окружение**
+   ```bash
+   python -m venv venv
+   ```
+   - Для Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - Для Linux/Mac:
+     ```bash
+     source venv/bin/activate
+     ```
 
-### Установка зависимостей
--pip install -r requirements.txt
+3. **Установить зависимости**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Запуск сервера
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+4. **Запустить сервер**
+   ```bash
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+   ```
+
+5. **Открыть в браузере**
+   - Перейдите по следующему адресу: [http://localhost:8000](http://localhost:8000)
+
 
 # 📡 API Эндпоинты
 
@@ -83,7 +105,7 @@ docker-compose down
 - `README.md`
 
 # 🔧 Требования
-Python 3.9+
+Python 3.11+
 CUDA (опционально, для GPU)
 Docker (опционально)
 4GB RAM минимум
